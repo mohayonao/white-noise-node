@@ -1,0 +1,19 @@
+{
+  "name": "white-noise-source",
+  "description": "white noise source for Web Audio API",
+  "version": "0.0.0",
+  "author": "mohayonao <mohayonao@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/mohayonao/white-noise-source/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "homepage": "https://github.com/mohayonao/white-noise-source/",
+  "keywords": [],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/mohayonao/white-noise-source.git"
+  },
+  "scripts": {}
+}
