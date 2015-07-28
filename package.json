@@ -7,7 +7,24 @@
     "url": "https://github.com/mohayonao/white-noise-source/issues"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "babel": "^5.8.12",
+    "babel-eslint": "^4.0.5",
+    "browserify": "^11.0.0",
+    "eslint": "^0.24.1",
+    "espower-babel": "^3.2.0",
+    "isparta": "^3.0.3",
+    "mocha": "^2.2.5",
+    "power-assert": "^0.11.0",
+    "sinon": "^1.15.4",
+    "web-audio-test-api": "^0.3.6"
+  },
+  "files": [
+    "package.json",
+    "README.md",
+    "index.js",
+    "lib"
+  ],
   "homepage": "https://github.com/mohayonao/white-noise-source/",
   "keywords": [],
   "license": "MIT",
@@ -15,5 +32,14 @@
     "type": "git",
     "url": "http://github.com/mohayonao/white-noise-source.git"
   },
-  "scripts": {}
+  "scripts": {
+    "build": "npm run build-to5 && npm run build-browser",
+    "build-browser": "browserify index.js --standalone WhiteNoiseSource -o build/white-noise-source.js",
+    "build-to5": "babel src --out-dir lib",
+    "cover": "babel-node $(npm bin)/isparta cover --report text --report html _mocha",
+    "lint": "eslint src test",
+    "prepublish": "rm -rf lib && npm run lint && npm run test && npm run build-to5",
+    "test": "mocha --compilers js:espower-babel/guess",
+    "travis": "npm run lint && npm run test"
+  }
 }
