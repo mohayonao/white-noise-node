@@ -24,27 +24,37 @@ export default class WhiteNoiseSource {
   }
 
   set onended(callback) {
-    this[BUFSRC].onended = callback;
+    if (this[BUFSRC]) {
+      this[BUFSRC].onended = callback;
+    }
   }
 
   get onended() {
-    return this[BUFSRC].onended;
+    return this[BUFSRC] ? this[BUFSRC].onended : null;
   }
 
   start(when = 0) {
-    this[BUFSRC].start(when);
+    if (this[BUFSRC]) {
+      this[BUFSRC].start(when);
+    }
   }
 
   stop(when = 0) {
-    this[BUFSRC].stop(when);
+    if (this[BUFSRC]) {
+      this[BUFSRC].stop(when);
+    }
   }
 
   connect(...args) {
-    this[OUTLET].connect(...args);
+    if (this[OUTLET]) {
+      this[OUTLET].connect(...args);
+    }
   }
 
   disconnect(...args) {
-    this[OUTLET].disconnect(...args);
+    if (this[OUTLET]) {
+      this[OUTLET].disconnect(...args);
+    }
   }
 
   dispose() {

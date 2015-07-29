@@ -45,6 +45,18 @@ describe("WhiteNoiseSource", () => {
       assert(noise.onended === noise[BUFSRC].onended);
       assert(noise[BUFSRC].onended === onended);
     });
+    it("works when disposed", () => {
+      let noise = new WhiteNoiseSource(audioContext);
+      let onended = sinon.spy();
+
+      noise.dispose();
+
+      assert.doesNotThrow(() => {
+        noise.onended = onended;
+      });
+
+      assert(noise.onended === null);
+    });
   });
   describe("#start(when: number): void", () => {
     it("works", () => {
@@ -66,6 +78,15 @@ describe("WhiteNoiseSource", () => {
 
       assert(noise[BUFSRC].start.callCount === 1);
       assert(noise[BUFSRC].start.args[0][0] === 0);
+    });
+    it("works when disposed", () => {
+      let noise = new WhiteNoiseSource(audioContext);
+
+      noise.dispose();
+
+      assert.doesNotThrow(() => {
+        noise.start();
+      });
     });
   });
   describe("#stop(when: number): void", () => {
@@ -91,6 +112,15 @@ describe("WhiteNoiseSource", () => {
       assert(noise[BUFSRC].stop.callCount === 1);
       assert(noise[BUFSRC].stop.args[0][0] === 0);
     });
+    it("works when disposed", () => {
+      let noise = new WhiteNoiseSource(audioContext);
+
+      noise.dispose();
+
+      assert.doesNotThrow(() => {
+        noise.stop();
+      });
+    });
   });
   describe("#connect(...args): void", () => {
     it("works", () => {
@@ -110,6 +140,15 @@ describe("WhiteNoiseSource", () => {
 
       assert(!audioContext.destination.$isConnectedFrom(noise[OUTLET]));
     });
+    it("works when disposed", () => {
+      let noise = new WhiteNoiseSource(audioContext);
+
+      noise.dispose();
+
+      assert.doesNotThrow(() => {
+        noise.connect();
+      });
+    });
   });
   describe("#dispose(): void", () => {
     it("works", () => {
@@ -119,6 +158,15 @@ describe("WhiteNoiseSource", () => {
 
       assert(noise[BUFSRC] === null);
       assert(noise[OUTLET] === null);
+    });
+    it("works when disposed", () => {
+      let noise = new WhiteNoiseSource(audioContext);
+
+      noise.dispose();
+
+      assert.doesNotThrow(() => {
+        noise.disconnect();
+      });
     });
   });
 });
