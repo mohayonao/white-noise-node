@@ -45,28 +45,36 @@ var WhiteNoiseSource = (function () {
     value: function start() {
       var when = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
-      this[_symbols.BUFSRC].start(when);
+      if (this[_symbols.BUFSRC]) {
+        this[_symbols.BUFSRC].start(when);
+      }
     }
   }, {
     key: "stop",
     value: function stop() {
       var when = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
-      this[_symbols.BUFSRC].stop(when);
+      if (this[_symbols.BUFSRC]) {
+        this[_symbols.BUFSRC].stop(when);
+      }
     }
   }, {
     key: "connect",
     value: function connect() {
-      var _OUTLET;
+      if (this[_symbols.OUTLET]) {
+        var _OUTLET;
 
-      (_OUTLET = this[_symbols.OUTLET]).connect.apply(_OUTLET, arguments);
+        (_OUTLET = this[_symbols.OUTLET]).connect.apply(_OUTLET, arguments);
+      }
     }
   }, {
     key: "disconnect",
     value: function disconnect() {
-      var _OUTLET2;
+      if (this[_symbols.OUTLET]) {
+        var _OUTLET2;
 
-      (_OUTLET2 = this[_symbols.OUTLET]).disconnect.apply(_OUTLET2, arguments);
+        (_OUTLET2 = this[_symbols.OUTLET]).disconnect.apply(_OUTLET2, arguments);
+      }
     }
   }, {
     key: "dispose",
@@ -81,10 +89,12 @@ var WhiteNoiseSource = (function () {
   }, {
     key: "onended",
     set: function set(callback) {
-      this[_symbols.BUFSRC].onended = callback;
+      if (this[_symbols.BUFSRC]) {
+        this[_symbols.BUFSRC].onended = callback;
+      }
     },
     get: function get() {
-      return this[_symbols.BUFSRC].onended;
+      return this[_symbols.BUFSRC] ? this[_symbols.BUFSRC].onended : null;
     }
   }]);
 
