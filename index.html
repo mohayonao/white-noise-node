@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>WhiteNoiseSource</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+  <style>
+    body { font-family: "Source Sans Pro", sans-serif; }
+    canvas { width: 100%; height: 120px; background: black; }
+    hr { border: none; }
+    #app { margin: 10px 0; }
+    #app .btn { width: 100px; }
+    .prettyprint { padding: 0; margin: 0; background: white; border: none !important; }
+  </style>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/0.12.8/vue.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+  <script src="build/white-noise-source.js"></script>
+  <script>
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    window.$ = document.getElementById.bind(document);
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div id="app">
+      <div class="page-header">
+        <h1>WhiteNoiseSource</h1>
+        <div>
+          <a href="https://github.com/mohayonao/white-noise-source"><img src="http://img.shields.io/badge/repository-GitHub-blue.svg?style=flat-square"></a>
+          <a href="https://travis-ci.org/mohayonao/white-noise-source"><img src="http://img.shields.io/travis/mohayonao/white-noise-source.svg?style=flat-square"></a>
+          <a href="https://www.npmjs.org/package/@mohayonao/white-noise-source"><img src="http://img.shields.io/npm/v/@mohayonao/white-noise-source.svg?style=flat-square"></a>
+          <a href="http://mohayonao.mit-license.org/"><img src="http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
+        </div>
+      </div>
+      <div id="app" class="row">
+        <div class="col-md-8">
+          <button class="btn btn-default" v-on="click: toggle">{{ isPlaying ? "Stop" : "Start" }}</button>
+        </div>
+        <div class="col-md-4">
+           <canvas id="canvas"></canvas>
+        </div>
+      </div>
+      <hr>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">example</h3>
+        </div>
+        <div class="panel-body">
+          <pre class="prettyprint" id="code"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script id="example">
+  var audioContext = new AudioContext();
+  var destination = audioContext.createAnalyser();
+  var noise = null;
+
+  function start() {
+    noise = new WhiteNoiseSource(audioContext);
+    noise.start(audioContext.currentTime);
+    noise.connect(destination);
+  }
+
+  function stop() {
+    noise.stop(audioContext.currentTime);
+    noise.disconnect();
+  }
+  </script>
+  <script>
+  window.addEventListener("DOMContentLoaded", function() {
+    var gain = audioContext.createGain();
+
+    gain.gain.value = 0.1;
+
+    destination.connect(gain);
+    gain.connect(audioContext.destination);
+
+    var array = new Float32Array(destination.frequencyBinCount);
+    var canvas = $("canvas");
+
+    canvas.width = 240;
+    canvas.height = 120;
+
+    canvas.context = canvas.getContext("2d");
+    canvas.context.fillStyle = "#000000";
+    canvas.context.strokeStyle = "#f5f5f5";
+
+    function draw() {
+      var i, imax, x, y;
+
+      canvas.context.fillRect(0, 0, canvas.width, canvas.height);
+
+      destination.getFloatFrequencyData(array);
+
+      canvas.context.beginPath();
+
+      for (i = 0, imax = array.length; i < imax; i++) {
+        x = (i / imax) * canvas.width;
+        y = -(array[i] / 120) * canvas.height;
+
+        canvas.context.lineTo(x, y);
+      }
+
+      canvas.context.stroke();
+    }
+
+    var app = new Vue({
+      el: "#app",
+      data: {
+        isPlaying: false,
+        timerId: 0,
+      },
+      methods: {
+        toggle: function() {
+          this.isPlaying = !this.isPlaying;
+
+          if (this.isPlaying) {
+            start();
+            this.timerId = setInterval(draw, 1000 / 20);
+          } else {
+            stop();
+            this.timerId = clearInterval(this.timerId)|0;
+          }
+        },
+      },
+    });
+
+    // code
+    $("code").textContent = $("example").textContent;
+    prettyPrint();
+  });
+  </script>
+</body>
+</html>
