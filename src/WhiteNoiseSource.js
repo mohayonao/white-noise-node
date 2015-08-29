@@ -1,12 +1,13 @@
-import noiseGenerator from "./noiseGenerator";
+import createAudioBufferFromArray from "@mohayonao/web-audio-utils/createAudioBufferFromArray";
+import NoiseGenerator from "./NoiseGenerator";
 import { CONTEXT, BUFSRC, OUTLET } from "./symbols";
 
 let BUFFER = null;
 
-export default class WhiteNoiseSource {
+export default class WhiteNoiseSourceNode {
   constructor(audioContext) {
     if (BUFFER === null) {
-      BUFFER = noiseGenerator.createBuffer(audioContext, 5);
+      BUFFER = createAudioBufferFromArray([ NoiseGenerator.generate(5, audioContext.sampleRate) ], audioContext);
     }
 
     let bufSrc = audioContext.createBufferSource();
