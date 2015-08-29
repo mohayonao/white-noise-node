@@ -3,7 +3,7 @@
 [![NPM Version](http://img.shields.io/npm/v/@mohayonao/white-noise-source.svg?style=flat-square)](https://www.npmjs.org/package/@mohayonao/white-noise-source)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](http://mohayonao.mit-license.org/)
 
-> white noise source for Web Audio API
+> WhiteNoiseSourceNode for Web Audio API
 
 ## Installation
 
@@ -16,6 +16,23 @@ npm install @mohayonao/white-noise-source
 Browser
 
 - [white-noise-source.js](https://raw.githubusercontent.com/mohayonao/white-noise-source/master/build/white-noise-source.js)
+
+## Example
+
+```js
+import WhiteNoiseSource from "@mohayonao/white-noise-source";
+
+let audioContext = new AudioContext();
+let whiteNoise = new WhiteNoiseSource(audioContext);
+
+whiteNoise.start();
+whiteNoise.connect(audioContext.destination);
+
+setTimeout(() => {
+  whiteNoise.stop();
+  whiteNoise.disconnect();
+}, 1000);
+```
 
 ## API
 ### WhiteNoiseSource
