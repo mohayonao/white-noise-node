@@ -1,7 +1,25 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.WhiteNoiseSource = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = require("./lib");
 
-},{"./lib":3}],2:[function(require,module,exports){
+},{"./lib":4}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = {
+  generate: function generate(duration, sampleRate) {
+    var noise = new Float32Array(duration * sampleRate);
+
+    for (var i = 0, imax = noise.length; i < imax; i++) {
+      noise[i] = Math.random() * 2 - 1;
+    }
+
+    return noise;
+  }
+};
+module.exports = exports["default"];
+},{}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14,20 +32,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _noiseGenerator = require("./noiseGenerator");
+var _mohayonaoWebAudioUtilsCreateAudioBufferFromArray = require("@mohayonao/web-audio-utils/createAudioBufferFromArray");
 
-var _noiseGenerator2 = _interopRequireDefault(_noiseGenerator);
+var _mohayonaoWebAudioUtilsCreateAudioBufferFromArray2 = _interopRequireDefault(_mohayonaoWebAudioUtilsCreateAudioBufferFromArray);
+
+var _NoiseGenerator = require("./NoiseGenerator");
+
+var _NoiseGenerator2 = _interopRequireDefault(_NoiseGenerator);
 
 var _symbols = require("./symbols");
 
 var BUFFER = null;
 
-var WhiteNoiseSource = (function () {
-  function WhiteNoiseSource(audioContext) {
-    _classCallCheck(this, WhiteNoiseSource);
+var WhiteNoiseSourceNode = (function () {
+  function WhiteNoiseSourceNode(audioContext) {
+    _classCallCheck(this, WhiteNoiseSourceNode);
 
     if (BUFFER === null) {
-      BUFFER = _noiseGenerator2["default"].createBuffer(audioContext, 5);
+      BUFFER = (0, _mohayonaoWebAudioUtilsCreateAudioBufferFromArray2["default"])([_NoiseGenerator2["default"].generate(5, audioContext.sampleRate)], audioContext);
     }
 
     var bufSrc = audioContext.createBufferSource();
@@ -40,7 +62,7 @@ var WhiteNoiseSource = (function () {
     this[_symbols.OUTLET] = bufSrc;
   }
 
-  _createClass(WhiteNoiseSource, [{
+  _createClass(WhiteNoiseSourceNode, [{
     key: "start",
     value: function start() {
       var when = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
@@ -98,12 +120,12 @@ var WhiteNoiseSource = (function () {
     }
   }]);
 
-  return WhiteNoiseSource;
+  return WhiteNoiseSourceNode;
 })();
 
-exports["default"] = WhiteNoiseSource;
+exports["default"] = WhiteNoiseSourceNode;
 module.exports = exports["default"];
-},{"./noiseGenerator":4,"./symbols":5}],3:[function(require,module,exports){
+},{"./NoiseGenerator":2,"./symbols":5,"@mohayonao/web-audio-utils/createAudioBufferFromArray":6}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -118,44 +140,52 @@ var _WhiteNoiseSource2 = _interopRequireDefault(_WhiteNoiseSource);
 
 exports["default"] = _WhiteNoiseSource2["default"];
 module.exports = exports["default"];
-},{"./WhiteNoiseSource":2}],4:[function(require,module,exports){
+},{"./WhiteNoiseSource":3}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-function createBuffer(audioContext, duration) {
-  var length = duration * audioContext.sampleRate;
-  var buffer = audioContext.createBuffer(1, length, audioContext.sampleRate);
+var CONTEXT = typeof Symbol !== "undefined" ? Symbol("CONTEXT") : "@mohayonao/white-noise-source:CONTEXT";
+exports.CONTEXT = CONTEXT;
+var BUFSRC = typeof Symbol !== "undefined" ? Symbol("BUFSRC") : "@mohayonao/white-noise-source:BUFSRC";
+exports.BUFSRC = BUFSRC;
+var OUTLET = typeof Symbol !== "undefined" ? Symbol("OUTLET") : "@mohayonao/white-noise-source:OUTLET";
+exports.OUTLET = OUTLET;
+},{}],6:[function(require,module,exports){
+var getAudioContext = require("./getAudioContext");
 
-  buffer.getChannelData(0).set(generate(length));
+module.exports = function(array, audioContext) {
+  var buffer;
+
+  audioContext = audioContext || getAudioContext();
+  buffer = audioContext.createBuffer(array.length, array[0].length, audioContext.sampleRate);
+
+  array.forEach(function(data, i) {
+    buffer.getChannelData(i).set(data);
+  });
 
   return buffer;
+};
+
+},{"./getAudioContext":7}],7:[function(require,module,exports){
+(function (global){
+var audioContext = null;
+
+if (typeof global.AudioContext === "undefined" && typeof global.webkitAudioContext !== "undefined") {
+  global.AudioContext = global.webkitAudioContext;
+}
+if (typeof global.OfflineAudioContext === "undefined" && typeof global.webkitOfflineAudioContext !== "undefined") {
+  global.OfflineAudioContext = global.webkitOfflineAudioContext;
 }
 
-function generate(length) {
-  var noise = new Float32Array(length);
-
-  for (var i = 0; i < length; i++) {
-    noise[i] = Math.random() * 2 - 1;
+module.exports = function() {
+  if (audioContext === null) {
+    audioContext = new global.AudioContext();
   }
+  return audioContext;
+};
 
-  return noise;
-}
-
-exports["default"] = { generate: generate, createBuffer: createBuffer };
-module.exports = exports["default"];
-},{}],5:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var CONTEXT = typeof Symbol !== "undefined" ? Symbol("CONTEXT") : "@mohayonao/white-noise-generator:CONTEXT";
-exports.CONTEXT = CONTEXT;
-var BUFSRC = typeof Symbol !== "undefined" ? Symbol("BUFSRC") : "@mohayonao/white-noise-generator:BUFSRC";
-exports.BUFSRC = BUFSRC;
-var OUTLET = typeof Symbol !== "undefined" ? Symbol("OUTLET") : "@mohayonao/white-noise-generator:OUTLET";
-exports.OUTLET = OUTLET;
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}]},{},[1])(1)
 });
