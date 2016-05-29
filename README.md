@@ -1,6 +1,6 @@
-# PluckNode
-[![Build Status](http://img.shields.io/travis/mohayonao/white-source-node.svg?style=flat-square)](https://travis-ci.org/mohayonao/white-source-node)
-[![NPM Version](http://img.shields.io/npm/v/white-source-node.svg?style=flat-square)](https://www.npmjs.org/package/white-source-node)
+# WhiteNoiseSourceNode
+[![Build Status](http://img.shields.io/travis/mohayonao/white-noise-source.svg?style=flat-square)](https://travis-ci.org/mohayonao/white-noise-source)
+[![NPM Version](http://img.shields.io/npm/v/white-noise-source.svg?style=flat-square)](https://www.npmjs.org/package/white-noise-source)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](http://mohayonao.mit-license.org/)
 
 > WhiteNoise AudioNode for Web Audio API
@@ -8,13 +8,13 @@
 ## Installation
 
 ```
-npm install white-source-node
+npm install white-noise-source
 ```
 
 downloads:
 
-- [white-source-node.js](https://raw.githubusercontent.com/mohayonao/white-source-node/master/build/white-source-node.js)
-- [white-source-node.min.js](https://raw.githubusercontent.com/mohayonao/white-source-node/master/build/white-source-node.min.js)
+- [white-noise-source.js](https://raw.githubusercontent.com/mohayonao/white-noise-source/master/build/white-noise-source.js)
+- [white-noise-source.min.js](https://raw.githubusercontent.com/mohayonao/white-noise-source/master/build/white-noise-source.min.js)
 
 ## API
 ### PluckNode
@@ -42,11 +42,11 @@ noise.stop(audioContext.currentTime + 4);
 At first, call `install()` method.
 
 ```js
-require("white-source-node").install();
+require("white-noise-source").install();
 ```
 
 ```html
-<script src="/path/to/white-source-node.js"></script>
+<script src="/path/to/white-noise-source.js"></script>
 <script>WhiteNoiseSourceNode.install();</script>
 ```
 
@@ -54,7 +54,7 @@ Then, you can use `createWhiteNoiseSource()` method at AudioContext.
 
 ## Demo
 
-http://mohayonao.github.io/white-source-node/
+http://mohayonao.github.io/white-noise-source/
 
 ## License
 
