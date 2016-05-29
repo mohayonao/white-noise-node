@@ -1,2 +1,2 @@
 --reporter spec
---recursive
+--require web-audio-test-api

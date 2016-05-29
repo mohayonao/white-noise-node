@@ -1,55 +1,45 @@
 {
-  "name": "@mohayonao/white-noise-source",
+  "name": "white-noise-source",
   "description": "WhiteNoiseSourceNode for Web Audio API",
   "version": "0.1.2",
-  "author": "mohayonao <mohayonao@gmail.com>",
+  "author": "Nao Yonamine <mohayonao@gmail.com>",
   "bugs": {
     "url": "https://github.com/mohayonao/white-noise-source/issues"
   },
-  "dependencies": {
-    "@mohayonao/web-audio-utils": "^0.4.0"
-  },
   "devDependencies": {
-    "babel": "^5.8.23",
-    "babel-eslint": "^4.1.0",
-    "babel-plugin-espower": "^1.0.0",
-    "babelify": "^6.1.3",
-    "browserify": "^11.0.1",
-    "eslint": "^1.3.1",
-    "espower-babel": "^3.3.0",
-    "isparta": "^3.0.4",
-    "karma": "^0.13.3",
-    "karma-browserify": "^4.2.1",
-    "karma-chrome-launcher": "^0.2.0",
-    "karma-firefox-launcher": "^0.1.6",
-    "karma-mocha": "^0.2.0",
-    "mocha": "^2.2.5",
-    "power-assert": "^1.0.0",
-    "sinon": "^1.16.1",
-    "web-audio-test-api": "^0.3.6"
+    "browserify": "^13.0.1",
+    "istanbul": "^0.4.3",
+    "mocha": "^2.5.3",
+    "uglify-js": "^2.6.2",
+    "web-audio-test-api": "^0.5.2"
   },
   "files": [
+    "lib",
     "package.json",
-    "README.md",
-    "index.js",
-    "lib"
+    "README.md"
   ],
   "homepage": "https://github.com/mohayonao/white-noise-source/",
-  "keywords": [],
+  "keywords": [
+    "webaudioapi",
+    "whitenoise"
+  ],
   "license": "MIT",
+  "main": "lib/WhiteNoiseSourceNode.js",
   "repository": {
     "type": "git",
     "url": "http://github.com/mohayonao/white-noise-source.git"
   },
   "scripts": {
-    "build": "npm run build-to5 && npm run build-browser",
-    "build-browser": "browserify index.js --standalone WhiteNoiseSource -o build/white-noise-source.js",
-    "build-to5": "babel src --out-dir lib",
-    "cover": "babel-node $(npm bin)/isparta cover --report text --report html _mocha",
-    "lint": "eslint src test",
-    "prepublish": "rm -rf lib && npm run lint && npm run test && npm run build-to5",
-    "test": "mocha --compilers js:espower-babel/guess",
-    "test-browser": "karma start",
-    "travis": "npm run lint && npm run test && npm run test-browser"
+    "build": "npm run build-browser && npm run build-minify",
+    "build-browser": "browserify lib/WhiteNoiseSourceNode.js --standalone WhiteNoiseSourceNode -o build/white-noise-source.js",
+    "build-minify": "uglifyjs build/white-noise-source.js -o build/white-noise-source.min.js",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha",
+    "gh-pages": "git checkout gh-pages && git merge master && git push origin gh-pages && git checkout master",
+    "postversion": "git push && git push --tags",
+    "prepublish": "npm run test && npm run build",
+    "preversion": "npm run test",
+    "test": "mocha",
+    "travis": "npm run test",
+    "version": "npm run build && git add -A build"
   }
 }
