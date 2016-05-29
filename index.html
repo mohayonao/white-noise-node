@@ -2,47 +2,34 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>WhiteNoiseSource</title>
-  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
+  <title>WhiteNoiseSourceNode</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href=//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css>
   <style>
-    body { font-family: "Source Sans Pro", sans-serif; }
-    canvas { width: 100%; height: 120px; background: black; }
-    hr { border: none; }
-    #app { margin: 10px 0; }
-    #app .btn { width: 100px; }
-    .prettyprint { padding: 0; margin: 0; background: white; border: none !important; }
-  </style>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/0.12.8/vue.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
-  <script src="build/white-noise-source.js"></script>
-  <script>
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    window.$ = document.getElementById.bind(document);
-  </script>
+      #code { padding: 0; margin: 0; background: white; border: none }
+      #app { margin: 10px 0 }
+      #app .btn { width: 100px }
+    </style>
 </head>
 <body>
   <div class="container">
+    <div class="page-header">
+      <h1>white-noise-source</h1>
+      <div>
+        <a href="https://travis-ci.org/mohayonao/white-noise-source"><img src="http://img.shields.io/travis/mohayonao/white-noise-source.svg?style=flat-square"/></a>
+        <a href="https://www.npmjs.org/package/white-noise-source"><img src="http://img.shields.io/npm/v/white-noise-source.svg?style=flat-square"/></a>
+        <a href="http://mohayonao.mit-license.org/"><img src="http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"/></a>
+      </div>
+    </div>
+    <div>WhiteNoise AudioNode for Web Audio API | <a href="https://github.com/mohayonao/white-noise-source" target="github">GitHub</a></div>
     <div id="app">
-      <div class="page-header">
-        <h1>WhiteNoiseSource</h1>
-        <div>
-          <a href="https://github.com/mohayonao/white-noise-source"><img src="http://img.shields.io/badge/repository-GitHub-blue.svg?style=flat-square"></a>
-          <a href="https://travis-ci.org/mohayonao/white-noise-source"><img src="http://img.shields.io/travis/mohayonao/white-noise-source.svg?style=flat-square"></a>
-          <a href="https://www.npmjs.org/package/@mohayonao/white-noise-source"><img src="http://img.shields.io/npm/v/@mohayonao/white-noise-source.svg?style=flat-square"></a>
-          <a href="http://mohayonao.mit-license.org/"><img src="http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square"></a>
+      <div>
+        <div class="form-group row">
+          <div class="col-sm-2">
+            <button class="btn btn-default" v-on:click="play">{{ isPlaying ? "Stop" : "Start" }}</button>
+          </div>
         </div>
       </div>
-      <div id="app" class="row">
-        <div class="col-md-8">
-          <button class="btn btn-default" v-on="click: toggle">{{ isPlaying ? "Stop" : "Start" }}</button>
-        </div>
-        <div class="col-md-4">
-           <canvas id="canvas"></canvas>
-        </div>
-      </div>
-      <hr>
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">example</h3>
@@ -53,85 +40,85 @@
       </div>
     </div>
   </div>
-  <script id="example">
-  var audioContext = new AudioContext();
-  var destination = audioContext.createAnalyser();
-  var noise = null;
-
-  function start() {
-    noise = new WhiteNoiseSource(audioContext);
-    noise.start(audioContext.currentTime);
-    noise.connect(destination);
-  }
-
-  function stop() {
-    noise.stop(audioContext.currentTime);
-    noise.disconnect();
-  }
-  </script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/vue/1.0.24/vue.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js"></script>
+  <script src="//mohayonao.github.io/web-audio-scheduler/build/web-audio-scheduler.min.js"></script>
+  <script src="build/white-noise-source.js"></script>
   <script>
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
   window.addEventListener("DOMContentLoaded", function() {
-    var gain = audioContext.createGain();
+    "use strict";
 
-    gain.gain.value = 0.1;
-
-    destination.connect(gain);
-    gain.connect(audioContext.destination);
-
-    var array = new Float32Array(destination.frequencyBinCount);
-    var canvas = $("canvas");
-
-    canvas.width = 240;
-    canvas.height = 120;
-
-    canvas.context = canvas.getContext("2d");
-    canvas.context.fillStyle = "#000000";
-    canvas.context.strokeStyle = "#f5f5f5";
-
-    function draw() {
-      var i, imax, x, y;
-
-      canvas.context.fillRect(0, 0, canvas.width, canvas.height);
-
-      destination.getFloatFrequencyData(array);
-
-      canvas.context.beginPath();
-
-      for (i = 0, imax = array.length; i < imax; i++) {
-        x = (i / imax) * canvas.width;
-        y = -(array[i] / 120) * canvas.height;
-
-        canvas.context.lineTo(x, y);
-      }
-
-      canvas.context.stroke();
-    }
-
-    var app = new Vue({
+    window.app = new Vue({
       el: "#app",
       data: {
-        isPlaying: false,
-        timerId: 0,
+        isPlaying: false
       },
       methods: {
-        toggle: function() {
+        play: function() {
           this.isPlaying = !this.isPlaying;
 
           if (this.isPlaying) {
-            start();
-            this.timerId = setInterval(draw, 1000 / 20);
+            sched.start(compose);
           } else {
-            stop();
-            this.timerId = clearInterval(this.timerId)|0;
+            sched.stop(true);
           }
-        },
-      },
+        }
+      }
     });
 
     // code
-    $("code").textContent = $("example").textContent;
+    document.getElementById("code").textContent = document.getElementById("example").textContent;
+
     prettyPrint();
   });
+  </script>
+  <script id="example">
+    var audioContext = new AudioContext();
+    var sched = new WebAudioScheduler({ context: audioContext });
+
+    function hihat(e) {
+      var t0 = e.playbackTime;
+      var t1 = t0 + e.args.dur;
+      var noise = new WhiteNoiseSourceNode(audioContext);
+      var biquadFilter = audioContext.createBiquadFilter();
+      var gain = audioContext.createGain();
+
+      noise.start(t0);
+      noise.stop(t1);
+      noise.connect(biquadFilter);
+
+      biquadFilter.type = "highpass";
+      biquadFilter.frequency.value = 8000;
+      biquadFilter.Q.value = 24;
+      biquadFilter.connect(gain);
+
+      gain.gain.setValueAtTime(e.args.amp, t0);
+      gain.gain.linearRampToValueAtTime(0.0, t1);
+      gain.connect(audioContext.destination);
+    }
+
+    function compose(e) {
+      var t0 = e.playbackTime;
+
+      [
+        { dur: 0.050, amp: 0.40 },
+        { dur: 0.040, amp: 0.08 },
+        { dur: 0.050, amp: 0.30 },
+        { dur: 0.025, amp: 0.20 },
+        { dur: 0.050, amp: 0.40 },
+        { dur: 0.040, amp: 0.08 },
+        { dur: 0.050, amp: 0.30 },
+        { dur: 0.025, amp: 0.25 },
+      ].forEach(function(args, index) {
+        if (args) {
+          sched.insert(t0 + index * 0.125, hihat, args);
+        }
+      });
+
+      sched.insert(t0 + 1, compose);
+    }
   </script>
 </body>
 </html>
