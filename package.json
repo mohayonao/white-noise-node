@@ -1,7 +1,7 @@
 {
   "name": "white-noise-source",
   "description": "WhiteNoiseSourceNode for Web Audio API",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "author": "Nao Yonamine <mohayonao@gmail.com>",
   "bugs": {
     "url": "https://github.com/mohayonao/white-noise-source/issues"
