@@ -1,9 +1,9 @@
 "use strict";
 
 const assert = require("assert");
-const WhiteNoiseSourceNode = require("../lib/WhiteNoiseSourceNode");
+const WhiteNoiseNode = require("../lib/WhiteNoiseNode");
 
-describe("WhiteNoiseSourceNode", () => {
+describe("WhiteNoiseNode", () => {
   let audioContext;
 
   beforeEach(() => {
@@ -12,21 +12,21 @@ describe("WhiteNoiseSourceNode", () => {
 
   describe("constructor(audioContext: global.AudioContext)", () => {
     it("works", () => {
-      const node = new WhiteNoiseSourceNode(audioContext);
+      const node = new WhiteNoiseNode(audioContext);
 
       assert(node instanceof global.AudioNode);
     });
   });
   describe("#start(when: number): void", () => {
     it("works", () => {
-      const node = new WhiteNoiseSourceNode(audioContext);
+      const node = new WhiteNoiseNode(audioContext);
 
       assert(typeof node.start === "function");
     });
   });
   describe("#stop(when: number): void", () => {
     it("works", () => {
-      const node = new WhiteNoiseSourceNode(audioContext);
+      const node = new WhiteNoiseNode(audioContext);
 
       assert(typeof node.stop === "function");
     });

@@ -1,10 +1,10 @@
 {
-  "name": "white-noise-source",
-  "description": "WhiteNoiseSourceNode for Web Audio API",
+  "name": "white-noise-node",
+  "description": "WhiteNoiseNode for Web Audio API",
   "version": "1.0.0",
   "author": "Nao Yonamine <mohayonao@gmail.com>",
   "bugs": {
-    "url": "https://github.com/mohayonao/white-noise-source/issues"
+    "url": "https://github.com/mohayonao/white-noise-node/issues"
   },
   "devDependencies": {
     "browserify": "^13.0.1",
@@ -18,21 +18,21 @@
     "package.json",
     "README.md"
   ],
-  "homepage": "https://github.com/mohayonao/white-noise-source/",
+  "homepage": "https://github.com/mohayonao/white-noise-node/",
   "keywords": [
     "webaudioapi",
     "whitenoise"
   ],
   "license": "MIT",
-  "main": "lib/WhiteNoiseSourceNode.js",
+  "main": "lib/WhiteNoiseNode.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/mohayonao/white-noise-source.git"
+    "url": "http://github.com/mohayonao/white-noise-node.git"
   },
   "scripts": {
     "build": "npm run build-browser && npm run build-minify",
-    "build-browser": "browserify lib/WhiteNoiseSourceNode.js --standalone WhiteNoiseSourceNode -o build/white-noise-source.js",
-    "build-minify": "uglifyjs build/white-noise-source.js -o build/white-noise-source.min.js",
+    "build-browser": "browserify lib/WhiteNoiseNode.js --standalone WhiteNoiseNode -o build/white-noise-node.js",
+    "build-minify": "uglifyjs build/white-noise-node.js -o build/white-noise-node.min.js",
     "cover": "istanbul cover node_modules/mocha/bin/_mocha",
     "gh-pages": "git checkout gh-pages && git merge master && git push origin gh-pages && git checkout master",
     "postversion": "git push && git push --tags",
