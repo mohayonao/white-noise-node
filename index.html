@@ -82,17 +82,11 @@
       var t0 = e.playbackTime;
       var t1 = t0 + e.args.dur;
       var noise = new WhiteNoiseNode(audioContext);
-      var biquadFilter = audioContext.createBiquadFilter();
       var gain = audioContext.createGain();
 
       noise.start(t0);
       noise.stop(t1);
-      noise.connect(biquadFilter);
-
-      biquadFilter.type = "highpass";
-      biquadFilter.frequency.value = 8000;
-      biquadFilter.Q.value = 24;
-      biquadFilter.connect(gain);
+      noise.connect(gain);
 
       gain.gain.setValueAtTime(e.args.amp, t0);
       gain.gain.linearRampToValueAtTime(0.0, t1);

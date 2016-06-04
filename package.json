@@ -8,13 +8,12 @@
   },
   "devDependencies": {
     "browserify": "^13.0.1",
-    "istanbul": "^0.4.3",
-    "mocha": "^2.5.3",
+    "eater": "^1.5.5",
     "uglify-js": "^2.6.2",
     "web-audio-test-api": "^0.5.2"
   },
   "files": [
-    "lib",
+    "index.js",
     "package.json",
     "README.md"
   ],
@@ -31,14 +30,13 @@
   },
   "scripts": {
     "build": "npm run build-browser && npm run build-minify",
-    "build-browser": "browserify lib/WhiteNoiseNode.js --standalone WhiteNoiseNode -o build/white-noise-node.js",
+    "build-browser": "browserify index.js --standalone WhiteNoiseNode -o build/white-noise-node.js",
     "build-minify": "uglifyjs build/white-noise-node.js -o build/white-noise-node.min.js",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha",
     "gh-pages": "git checkout gh-pages && git merge master && git push origin gh-pages && git checkout master",
     "postversion": "git push && git push --tags",
     "prepublish": "npm run test && npm run build",
     "preversion": "npm run test",
-    "test": "mocha",
+    "test": "eater",
     "travis": "npm run test",
     "version": "npm run build && git add -A build"
   }
