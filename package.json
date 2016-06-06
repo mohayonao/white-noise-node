@@ -23,7 +23,7 @@
     "whitenoise"
   ],
   "license": "MIT",
-  "main": "lib/WhiteNoiseNode.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "http://github.com/mohayonao/white-noise-node.git"
